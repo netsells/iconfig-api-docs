@@ -91,7 +91,7 @@
       <script src="javascripts/all.js"></script>
   </head>
 
-  <body class="index" data-languages="[&quot;shell&quot;,&quot;php&quot;]">
+  <body class="index" data-languages="[&quot;http&quot;,&quot;php&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
@@ -101,7 +101,7 @@
     <div class="tocify-wrapper">
       <!-- <img src="images/logo.png" alt="Logo" /> -->
         <div class="lang-selector">
-              <a href="#" data-language-name="shell">curl</a>
+              <a href="#" data-language-name="http">http</a>
               <a href="#" data-language-name="php">php</a>
         </div>
         <div class="search">
@@ -124,12 +124,17 @@
 <p>At the moment we offer an SDK for the API in php only. You can view the SDK languages using the selector at the top right.</p>
 
 <h1 id="authentication">Authentication</h1>
-<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> -X POST <span class="se">\</span>
--d <span class="s1">'{"grant_type":"personal_access","client_id":"XXXXX", "client_secret": "XXXXX"}'</span> <span class="se">\</span>
-https://api.iconfig.io/oauth/token
-</code></pre><pre class="highlight php"><code>use Netsells\iConfig\iConfig;
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/oauth/token</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">api.iconfig.io</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 
-$iConfig = new iConfig($clientId, $clientSecret);
+<span class="p">{</span><span class="w">
+    </span><span class="nt">"grant_type"</span><span class="p">:</span><span class="s2">"personal_access"</span><span class="p">,</span><span class="w"> 
+    </span><span class="nt">"client_id"</span><span class="p">:</span><span class="s2">"XXXXX"</span><span class="p">,</span><span class="w"> 
+    </span><span class="nt">"client_secret"</span><span class="p">:</span><span class="w"> </span><span class="s2">"XXXXX"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><pre class="highlight php"><code>$iConfig = new Netsells\iConfig\iConfig($clientId, $clientSecret);
 </code></pre>
 <p>To authenticate with iConfig you will need the client ID and secret given to you (these form your account&rsquo;s personal access token). You will need to use these details to obtain an access_token, this token will be used for all future requests.</p>
 
@@ -137,10 +142,87 @@ $iConfig = new iConfig($clientId, $clientSecret);
 Make sure to replace the `client_id` and `client_secret` with your details
 </aside>
 
+<h1 id="configs">Configs</h1>
+
+<p>The heart of iconfig. We currently only offer email configuration but have allowed scope for future configs.</p>
+
+<h2 id="create-config">Create Config</h2>
+<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/config/create</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
+<span class="na">Host</span><span class="p">:</span> <span class="s">api.iconfig.io</span>
+<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
+
+<span class="p">{</span><span class="w">
+  </span><span class="nt">"configs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"email_address"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my@email.com"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"EmailAccountType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EmailTypeIMAP"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"IncomingMailServerAuthentication"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EmailAuthPassword"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"OutgoingMailServerAuthentication"</span><span class="p">:</span><span class="w"> </span><span class="s2">"EmailAuthPassword"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"IncomingPassword"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mysecureemailpassword"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"OutgoingPassword"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mysecureemailpassword"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"IncomingMailServerHostName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mail.email.com"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"OutgoingMailServerHostName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mail.email.com"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"IncomingMailServerPortNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"993"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"OutgoingMailServerPortNumber"</span><span class="p">:</span><span class="w"> </span><span class="s2">"587"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"IncomingMailServerUseSSL"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"OutgoingMailServerUseSSL"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"settings"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mysecurepassword"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre><pre class="highlight php"><code><span class="cp">&lt;?php</span>
+
+<span class="k">use</span> <span class="nx">Netsells\iConfig\Email</span><span class="p">;</span>
+
+<span class="nv">$config</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Netsells\iConfig\Config</span><span class="p">;</span>
+
+<span class="c1">// Configure Settings
+</span><span class="nv">$settings</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Netsells\iConfig\ConfigSettings</span><span class="p">;</span>
+<span class="nv">$settings</span><span class="o">-&gt;</span><span class="na">setPassword</span><span class="p">(</span><span class="s1">'mysecurepassword'</span><span class="p">);</span>
+
+<span class="nv">$config</span><span class="o">-&gt;</span><span class="na">setSettings</span><span class="p">(</span><span class="nv">$settings</span><span class="p">);</span>
+
+<span class="c1">// Configure Email
+</span><span class="nv">$emailConfig</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Email</span><span class="p">;</span>
+<span class="nv">$emailConfig</span><span class="o">-&gt;</span><span class="na">setEmailAddress</span><span class="p">(</span><span class="s1">'my@email.com'</span><span class="p">);</span>
+<span class="nv">$emailConfig</span><span class="o">-&gt;</span><span class="na">setEmailAccountName</span><span class="p">(</span><span class="s1">'Testy McEmailface'</span><span class="p">);</span>
+
+<span class="nv">$emailConfig</span><span class="o">-&gt;</span><span class="na">setType</span><span class="p">(</span><span class="nx">Email</span><span class="o">::</span><span class="na">TYPE_IMAP</span><span class="p">);</span>
+
+<span class="nv">$emailConfig</span><span class="o">-&gt;</span><span class="na">setIncomingAuthentication</span><span class="p">(</span><span class="nx">Email</span><span class="o">::</span><span class="na">AUTHENTICATION_PASSWORD</span><span class="p">);</span>
+<span class="nv">$emailConfig</span><span class="o">-&gt;</span><span class="na">setOutgoingAuthentication</span><span class="p">(</span><span class="nx">Email</span><span class="o">::</span><span class="na">AUTHENTICATION_PASSWORD</span><span class="p">);</span>
+
+<span class="nv">$emailConfig</span><span class="o">-&gt;</span><span class="na">setIncomingUsername</span><span class="p">(</span><span class="s1">'my@email.com'</span><span class="p">);</span>
+<span class="nv">$emailConfig</span><span class="o">-&gt;</span><span class="na">setOutgoingUsername</span><span class="p">(</span><span class="s1">'my@email.com'</span><span class="p">);</span>
+
+<span class="nv">$emailConfig</span><span class="o">-&gt;</span><span class="na">setIncomingPassword</span><span class="p">(</span><span class="s1">'mysecureemailpassword'</span><span class="p">);</span>
+<span class="nv">$emailConfig</span><span class="o">-&gt;</span><span class="na">setOutgoingPassword</span><span class="p">(</span><span class="s1">'mysecureemailpassword'</span><span class="p">);</span>
+
+<span class="nv">$emailConfig</span><span class="o">-&gt;</span><span class="na">setIncomingPort</span><span class="p">(</span><span class="mi">993</span><span class="p">);</span>
+<span class="nv">$emailConfig</span><span class="o">-&gt;</span><span class="na">setOutgoingPort</span><span class="p">(</span><span class="mi">465</span><span class="p">);</span>
+
+<span class="nv">$emailConfig</span><span class="o">-&gt;</span><span class="na">setIncomingServerSSL</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+<span class="nv">$emailConfig</span><span class="o">-&gt;</span><span class="na">setOutgoingServerSSL</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+
+<span class="nv">$emailConfig</span><span class="o">-&gt;</span><span class="na">setIncomingServer</span><span class="p">(</span><span class="s1">'mail.email.com'</span><span class="p">);</span>
+<span class="nv">$emailConfig</span><span class="o">-&gt;</span><span class="na">setOutgoingServer</span><span class="p">(</span><span class="s1">'mail.email.com'</span><span class="p">);</span>
+
+<span class="nv">$config</span><span class="o">-&gt;</span><span class="na">addPayload</span><span class="p">(</span><span class="nv">$emailConfig</span><span class="p">);</span>
+
+<span class="c1">// Send the Config
+</span><span class="nv">$response</span> <span class="o">=</span> <span class="nv">$iConfig</span><span class="o">-&gt;</span><span class="na">submitConfig</span><span class="p">(</span><span class="nv">$config</span><span class="p">);</span>
+</code></pre>
+<p>Our SDK library allows you to create the config in an OOP way. You can see examples to the right.</p>
+
       </div>
       <div class="dark-box">
           <div class="lang-selector">
-                <a href="#" data-language-name="shell">curl</a>
+                <a href="#" data-language-name="http">http</a>
                 <a href="#" data-language-name="php">php</a>
           </div>
       </div>
