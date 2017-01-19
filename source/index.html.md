@@ -2,7 +2,7 @@
 title: API Reference
 
 language_tabs:
-  - shell: curl
+  - http
   - php
 
 toc_footers:
@@ -22,10 +22,13 @@ At the moment we offer an SDK for the API in php only. You can view the SDK lang
 
 # Authentication
 
-```shell
-curl -H "Content-Type: application/json" -X POST \
--d '{"grant_type":"personal_access","client_id":"XXXXX", "client_secret": "XXXXX"}' \
-https://api.iconfig.io/oauth/token
+```http
+POST /oauth/token HTTP/1.1
+Accept: application/json
+Host: api.iconfig.io
+Content-Type: application/json
+
+{"grant_type":"personal_access", "client_id":"XXXXX", "client_secret": "XXXXX"}
 ```
 
 ```php
